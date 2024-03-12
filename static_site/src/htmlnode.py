@@ -59,8 +59,8 @@ class ParentNode(HTMLNode):
         if self.children is None:
             raise ValueError("ParentNode has no children, should this be a LeafNode?")
         child_tags = "".join([child.to_html() for child in self.children])
-        return f"<{self.tag}>{self.props_to_html()}{child_tags}</{self.tag}>"
+        return f"<{self.tag}{self.props_to_html()}>{child_tags}</{self.tag}>"
 
     def __repr__(self) -> str:
-        return f"ParentNode({self.tag}, {self.children}, {self.props})"
+        return f"ParentNode({self.tag}, children: {self.children}, {self.props})"
         
