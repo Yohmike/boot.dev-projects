@@ -37,4 +37,7 @@ class LeafNode(HTMLNode):
     def to_html(self) -> None:
         if self.value is None:
             raise ValueError("No value for leaf node")
-        return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
+        if self.tag is not None:
+            return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
+        else:
+            return f"{self.value}"
