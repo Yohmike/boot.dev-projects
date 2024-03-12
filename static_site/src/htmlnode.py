@@ -30,9 +30,8 @@ class HTMLNode():
 class LeafNode(HTMLNode):
     def __init__(self, tag: str | None = None, 
                  value: str | None = None, 
-                 children: List[HTMLNode] | None = None, 
                  props: Dict[str, str] | None = None) -> None:
-        super().__init__(tag, value, children, props)
+        super().__init__(tag, value, None, props)
     
     def to_html(self) -> None:
         if self.value is None:
@@ -41,3 +40,6 @@ class LeafNode(HTMLNode):
             return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
         else:
             return f"{self.value}"
+    
+    def __repr__(self) -> str:
+        return f"LeafNode({self.tag}, {self.value}, {self.props})"
