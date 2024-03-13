@@ -6,7 +6,7 @@ from textnode import TextNode, \
 
 from inline_markdown import split_nodes_delimiter,\
     extract_markdown_images, extract_markdown_links, \
-    split_nodes_image, split_nodes_link
+    split_nodes_image, split_nodes_link, text_to_textnodes
 
 class TestSplitNodes(unittest.TestCase):
     def test_simple_node(self):
@@ -105,7 +105,7 @@ class TestExtractFunctions(unittest.TestCase):
              ("another", "https://www.example.com/another")
              ])
 
-class TextSplitNodesImage(unittest.TestCase):
+class TestSplitNodesImage(unittest.TestCase):
     def test_simple_image(self):
         node = TextNode(
             "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)",
@@ -146,7 +146,7 @@ class TextSplitNodesImage(unittest.TestCase):
             ),
         ])
 
-class TextSplitNodesLinks(unittest.TestCase):
+class TestSplitNodesLinks(unittest.TestCase):
     def test_simple_link(self):
         node = TextNode(
             "This is text with an [link](https://i.imgur.com/zjjcJKZ.png)",
@@ -185,6 +185,26 @@ class TextSplitNodesLinks(unittest.TestCase):
                 "second link", text_type_link, 
                 "https://i.imgur.com/3elNhQu.png"
             ),
+        ])
+
+class TestTextToTextNodes(unittest.TestCase):
+    def test_all_link(self):
+        text = "This is **text** with an *italic* word and a `code block` and" \
+            " an ![image](https://i.imgur.com/zjjcJKZ.png)" \
+            " and a [link](https://boot.dev)"
+
+        new_nodes = text_to_textnodes(text=text)
+        self.assertEqual(new_nodes,[
+            TextNode("This is ", text_type_text),
+            TextNode("text", text_type_bold),
+            TextNode(" with an ", text_type_text),
+            TextNode("italic", text_type_italic),
+            TextNode(" word and a ", text_type_text),
+            TextNode("code block", text_type_code),
+            TextNode(" and an ", text_type_text),
+            TextNode("image", text_type_image, "https://i.imgur.com/zjjcJKZ.png"),
+            TextNode(" and a ", text_type_text),
+            TextNode("link", text_type_link, "https://boot.dev"),
         ])
 
 

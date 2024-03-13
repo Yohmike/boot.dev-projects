@@ -1,7 +1,8 @@
 import re
 from typing import List, Tuple
 from textnode import TextNode, \
-    text_type_text, text_type_image, text_type_link
+    text_type_text, text_type_image, text_type_link, \
+    text_type_bold, text_type_italic, text_type_code
 
 def split_nodes_delimiter(
         old_nodes: List[TextNode], 
@@ -67,6 +68,10 @@ def split_nodes_image(old_nodes: List[TextNode]) -> List[TextNode]:
                 split_nodes.append(
                     TextNode(image_text, text_type_image, url=image_link)
                 )
+        if left:
+            split_nodes.append(
+                TextNode(left, text_type_text)
+            )
         new_nodes.extend(split_nodes)
     return new_nodes
 
@@ -95,5 +100,20 @@ def split_nodes_link(old_nodes: List[TextNode]) -> List[TextNode]:
                 split_nodes.append(
                     TextNode(link_text, text_type_link, url=link_url)
                 )
-        new_nodes.extend(split_nodes)
+            if left:
+                split_nodes.append(
+                    TextNode(left, text_type_text)
+                )
+            new_nodes.extend(split_nodes)
     return new_nodes
+
+
+def text_to_textnodes(text: str) -> List[TextNode]:
+    root_node = TextNode(text, text_type_text)
+    nodes = split_nodes_delimiter([root_node], "**", text_type_bold)
+    nodes = split_nodes_delimiter(nodes, "*", text_type_italic)
+    nodes = split_nodes_delimiter(nodes, "`", text_type_code)
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_link(nodes)
+
+    return nodes
