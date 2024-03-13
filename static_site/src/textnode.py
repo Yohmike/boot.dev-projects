@@ -52,34 +52,3 @@ def text_node_to_html_node(text_node: TextNode) -> LeafNode:
         return valid_types[text_node.text_type]
 
 
-def split_nodes_delimiter(
-        old_nodes: List[TextNode], 
-        delimiter: str, 
-        text_type: str
-        ) -> List[TextNode]:
-    new_nodes = []
-    if not delimiter:
-        return old_nodes
-    for node in old_nodes:
-        if not isinstance(node, TextNode) or \
-            (isinstance(node, TextNode) and node.text_type != text_type_text):
-            new_nodes.append(node)
-        else:
-            split_nodes = []
-            text_to_split = node.text
-            if text_to_split.count(delimiter) % 2 != 0:
-                raise Exception(
-                    f"closing delimiter \"{delimiter}\" not found \
-                      for \"{text_to_split}\"")
-            else:
-                parts = text_to_split.split(delimiter)
-                for i in range(0, len(parts)):
-                    if i % 2 == 0:
-                        if parts[i]:
-                            split_nodes.append(
-                                TextNode(parts[i], text_type_text)
-                            )
-                    else:
-                        split_nodes.append(TextNode(parts[i], text_type))
-            new_nodes.extend(split_nodes)
-    return new_nodes
