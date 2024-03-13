@@ -56,11 +56,17 @@ def split_nodes_image(old_nodes: List[TextNode]) -> List[TextNode]:
             left = text_to_split
             for image_text, image_link in images:
                 image_str = f"![{image_text}]({image_link})"
-                current, left = left.split(image_str, 1)
-                split_nodes.extend([
-                    TextNode(current, text_type_text),
+                try:
+                    current, left = left.split(image_str, 1)
+                except ValueError:
+                    raise Exception("Imvalid markdown, check image tag")
+                if current != "":
+                    split_nodes.append(
+                        TextNode(current, text_type_text)
+                    )
+                split_nodes.append(
                     TextNode(image_text, text_type_image, url=image_link)
-                ])
+                )
         new_nodes.extend(split_nodes)
     return new_nodes
 
@@ -78,10 +84,16 @@ def split_nodes_link(old_nodes: List[TextNode]) -> List[TextNode]:
             left = text_to_split
             for link_text, link_url in links:
                 link_str = f"[{link_text}]({link_url})"
-                current, left = left.split(link_str, 1)
-                split_nodes.extend([
-                    TextNode(current, text_type_text),
+                try:
+                    current, left = left.split(link_str, 1)
+                except ValueError:
+                    raise Exception("Invalid markdown, check link tag")
+                if current != "":
+                    split_nodes.append(
+                        TextNode(current, text_type_text)
+                    )
+                split_nodes.append(
                     TextNode(link_text, text_type_link, url=link_url)
-                ])
+                )
         new_nodes.extend(split_nodes)
     return new_nodes

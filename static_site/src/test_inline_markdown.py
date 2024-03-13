@@ -116,6 +116,16 @@ class TextSplitNodesImage(unittest.TestCase):
             TextNode("This is text with an ", text_type_text),
             TextNode("image", text_type_image, "https://i.imgur.com/zjjcJKZ.png"),
         ])
+    
+    def test_start_image(self):
+        node = TextNode(
+            "![image](https://i.imgur.com/zjjcJKZ.png)",
+        text_type_text,
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertEqual(new_nodes,[
+            TextNode("image", text_type_image, "https://i.imgur.com/zjjcJKZ.png"),
+        ])
 
     def test_multiple_images(self):
         node = TextNode(
@@ -145,6 +155,16 @@ class TextSplitNodesLinks(unittest.TestCase):
         new_nodes = split_nodes_link([node])
         self.assertEqual(new_nodes,[
             TextNode("This is text with an ", text_type_text),
+            TextNode("link", text_type_link, "https://i.imgur.com/zjjcJKZ.png"),
+        ])
+
+    def test_start_link(self):
+        node = TextNode(
+            "[link](https://i.imgur.com/zjjcJKZ.png)",
+        text_type_text,
+        )
+        new_nodes = split_nodes_link([node])
+        self.assertEqual(new_nodes,[
             TextNode("link", text_type_link, "https://i.imgur.com/zjjcJKZ.png"),
         ])
 
