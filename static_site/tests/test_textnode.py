@@ -1,6 +1,6 @@
 import unittest
 
-from textnode import TextNode, \
+from src.textnode import TextNode, \
     text_type_bold, text_type_text, text_type_italic, text_type_code
 
 

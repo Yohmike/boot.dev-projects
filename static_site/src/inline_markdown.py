@@ -1,6 +1,6 @@
 import re
 from typing import List, Tuple
-from textnode import TextNode, \
+from src.textnode import TextNode, \
     text_type_text, text_type_image, text_type_link, \
     text_type_bold, text_type_italic, text_type_code
 

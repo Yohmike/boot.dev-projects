@@ -1,4 +1,4 @@
-from textnode import TextNode, text_node_to_html_node
+from src.textnode import TextNode, text_node_to_html_node
 
 
 def main():
