@@ -1,10 +1,12 @@
-from src.textnode import TextNode, text_node_to_html_node
-
+from utils import copy_dir
+import os
 
 def main():
-    node = TextNode("This is a text node", "bold", "https://www/boot/dev")
-    print(node)
-    print(text_node_to_html_node(node).to_html())
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    copy_dir(
+        source=os.path.join(dir_path,"../static"), 
+        destination=os.path.join(dir_path, "../public")
+    )
 
 if __name__ == "__main__":
     main()
