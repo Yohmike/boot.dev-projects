@@ -1,6 +1,6 @@
 import re
 from typing import List, Tuple
-from src.textnode import TextNode, \
+from textnode import TextNode, \
     text_type_text, text_type_image, text_type_link, \
     text_type_bold, text_type_italic, text_type_code
 
@@ -13,8 +13,7 @@ def split_nodes_delimiter(
     if not delimiter:
         return old_nodes
     for node in old_nodes:
-        if not isinstance(node, TextNode) or \
-            (isinstance(node, TextNode) and node.text_type != text_type_text):
+        if node.text_type != text_type_text:
             new_nodes.append(node)
         else:
             split_nodes = []
@@ -26,11 +25,10 @@ def split_nodes_delimiter(
             else:
                 parts = text_to_split.split(delimiter)
                 for i in range(0, len(parts)):
+                    if parts[i] == "":
+                        continue
                     if i % 2 == 0:
-                        if parts[i]:
-                            split_nodes.append(
-                                TextNode(parts[i], text_type_text)
-                            )
+                        split_nodes.append(TextNode(parts[i], text_type_text))
                     else:
                         split_nodes.append(TextNode(parts[i], text_type))
             new_nodes.extend(split_nodes)

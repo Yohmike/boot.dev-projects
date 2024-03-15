@@ -1,5 +1,5 @@
 from typing import Optional, List
-from src.htmlnode import LeafNode
+from htmlnode import LeafNode
 
 text_type_text = "text"
 text_type_bold = "bold"
@@ -43,7 +43,7 @@ def text_node_to_html_node(text_node: TextNode) -> LeafNode:
             tag="a", value=text_node.text, props={"href": text_node.url}),
         text_type_image: LeafNode(
             tag="img", 
-            value=None, 
+            value="", 
             props={"src": text_node.url, "alt": text_node.text})
     }
     if valid_types.get(text_node.text_type) is None:

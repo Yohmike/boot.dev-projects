@@ -1,8 +1,8 @@
 from typing import List
 
-from src.htmlnode import HTMLNode, ParentNode
-from src.inline_markdown import text_to_textnodes
-from src.textnode import text_node_to_html_node
+from htmlnode import HTMLNode, ParentNode
+from inline_markdown import text_to_textnodes
+from textnode import text_node_to_html_node
 
 block_type_paragraph = "paragraph"
 block_type_heading = "heading"
@@ -19,6 +19,8 @@ def markdown_to_blocks(doc: str) -> List[str]:
 
 
 def check_heading(block: str) -> bool:
+    if " " not in block:
+        return False
     head, rest = block.split(" ", 1)
     return set(head) == set("#") and rest
 
@@ -171,7 +173,6 @@ def markdown_to_html_node(markdown:str) -> HTMLNode:
             children.append(convert_block_unordered_list(block))
         if block_type == block_type_ordered_list:
             children.append(convert_block_ordered_list(block))
-    
     parent = ParentNode(children=children, tag="div")
 
     return parent

@@ -1,2 +1,3 @@
 #!/bin/bash
-python -m unittest discover -s tests
+export PYTHONPATH=$PYTHONPATH:./src:.
+python -m unittest discover -s src/tests 
