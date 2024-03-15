@@ -1,5 +1,9 @@
 from typing import List
 
+from src.htmlnode import HTMLNode, ParentNode
+from src.inline_markdown import text_to_textnodes
+from src.textnode import text_node_to_html_node
+
 block_type_paragraph = "paragraph"
 block_type_heading = "heading"
 block_type_code = "code"
@@ -20,7 +24,7 @@ def check_heading(block: str) -> bool:
 
 
 def check_code(block: str) -> bool:
-    return len(block) >= 6 and set(block[:2]) == set(block[-2:]) == set("`")
+    return len(block) >= 6 and set(block[:3]) == set(block[-3:]) == set("`")
 
 
 def check_quote(block: str) -> bool:
@@ -47,7 +51,7 @@ def check_ordered_list(block: str) -> bool:
     return True
 
 
-def block_to_block_type(block: List[str]) -> str:
+def block_to_block_type(block: str) -> str:
     if check_heading(block):
         return block_type_heading
     if check_code(block):
@@ -58,5 +62,116 @@ def block_to_block_type(block: List[str]) -> str:
         return block_type_unordered_list
     if check_ordered_list(block):
         return block_type_ordered_list
-    
     return block_type_paragraph
+
+
+def convert_block_quote(block: str) -> HTMLNode:
+    block_type = block_to_block_type(block)
+
+    if block_type != block_type_quote:
+        raise Exception("Can't convert block to quote")
+
+    no_quotes = " ".join([s[2:] for s in block.split("\n")])
+    children = [
+        text_node_to_html_node(node) for node in text_to_textnodes(no_quotes)
+    ]
+
+    return ParentNode(children, tag="blockquote")
+
+
+def convert_block_unordered_list(block: str) -> HTMLNode:
+    block_type = block_to_block_type(block)
+
+    if block_type != block_type_unordered_list:
+        raise Exception("Can't convert block to unordered list")
+
+    list_children = []
+    for line in block.split("\n"):
+        children = [
+            text_node_to_html_node(node) for node in text_to_textnodes(line[2:])
+        ]
+        list_children.append(ParentNode(children, tag="li"))
+
+    return ParentNode(list_children, tag="ul")
+
+
+def convert_block_ordered_list(block: str) -> HTMLNode:
+    block_type = block_to_block_type(block)
+
+    if block_type != block_type_ordered_list:
+        raise Exception("Can't convert block to ordered list")
+
+    list_children = []
+    for line in block.split("\n"):
+        _, content = line.split(".", 1)
+        children = [
+            text_node_to_html_node(node) for node in \
+                text_to_textnodes(content[1:])
+        ]
+        list_children.append(ParentNode(children, tag="li"))
+
+    return ParentNode(list_children, tag="ol")
+
+
+def convert_block_code(block: str) -> HTMLNode:
+    block_type = block_to_block_type(block)
+
+    if block_type != block_type_code:
+        raise Exception("Can't convert block to code")
+
+    children = [
+        text_node_to_html_node(node) for node in text_to_textnodes(block[3:-3])
+    ]
+    code_node = ParentNode(children, tag="code")
+    return ParentNode([code_node], tag="pre")
+
+
+def convert_block_heading(block: str) -> HTMLNode:
+    block_type = block_to_block_type(block)
+
+    if block_type != block_type_heading:
+        raise Exception("Can't convert block to heading")
+
+    head, content = block.split(" ", 1)
+    children = [
+        text_node_to_html_node(node) for node in text_to_textnodes(content)
+    ]
+
+    return ParentNode(children, tag=f"h{head.count("#")}")
+
+
+def convert_block_paragraph(block: str) -> HTMLNode:
+    block_type = block_to_block_type(block)
+
+    if block_type != block_type_paragraph:
+        raise Exception("Can't convert block to paragraph")
+    block = " ".join(block.split("\n"))
+    children = [
+        text_node_to_html_node(node) for node in text_to_textnodes(block)
+    ]
+
+    return ParentNode(children, tag="p")
+
+
+def markdown_to_html_node(markdown:str) -> HTMLNode:
+    blocks = markdown_to_blocks(markdown)
+    children = []
+    for block in blocks:
+        block_type = block_to_block_type(block)
+        
+        if block_type == block_type_paragraph:
+            children.append(convert_block_paragraph(block))
+        if block_type == block_type_heading:
+            children.append(convert_block_heading(block))
+        if block_type == block_type_code:
+            children.append(convert_block_code(block))
+        if block_type == block_type_quote:
+            children.append(convert_block_quote(block))
+        if block_type == block_type_unordered_list:
+            children.append(convert_block_unordered_list(block))
+        if block_type == block_type_ordered_list:
+            children.append(convert_block_ordered_list(block))
+    
+    parent = ParentNode(children=children, tag="div")
+
+    return parent
