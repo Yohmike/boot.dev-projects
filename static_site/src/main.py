@@ -1,5 +1,5 @@
 from utils import copy_dir
-from generate_page import generate_page
+from generate_page import generate_pages_recursive
 import os
 
 def main():
@@ -8,12 +8,12 @@ def main():
     public_dest = os.path.join(dir_path, "../public") 
 
     copy_dir(source=static_source, destination=public_dest)
-    source_index = os.path.join(dir_path, "../content/index.md")
-    destination_index = os.path.join(public_dest, "index.html")
+    source_index = os.path.join(dir_path, "../content")
+    destination_index = os.path.join(public_dest)
     template_source = os.path.join(dir_path, "../template.html")
-    generate_page(
-        from_path=source_index, 
-        dest_path=destination_index, 
+    generate_pages_recursive(
+        dir_path=source_index, 
+        dest_dir_path=destination_index, 
         template_path=template_source
     )
 
