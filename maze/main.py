@@ -3,8 +3,8 @@ from maze import Maze
 
 
 def main():
-    width = 800
-    height = 600
+    width = 1800
+    height = 1600
     win = Window(width=width, height=height)
 
     bottom_left_corner = Point(0, 0)
@@ -49,16 +49,16 @@ def main():
     initial_maze = Maze(
         x1 = 10,
         y1 = 10,
-        num_rows = 10,
-        num_cols = 5,
-        cell_size_x = 40,
+        num_rows = 20,
+        num_cols = 20,
+        cell_size_x = 20,
         cell_size_y = 20,
         win= win
     )
     initial_maze._break_entrance_and_exit()
     initial_maze._break_walls_r(0, 0)
     initial_maze._reset_cells_visited()
-
+    initial_maze.solve()
     win.wait_for_close()
 
 if __name__ == "__main__":

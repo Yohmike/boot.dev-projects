@@ -72,13 +72,13 @@ class Maze:
         while True:
             to_visit = []
             dir = ""
-            if i > 1 and not self._cells[i-1][j].visited:
+            if i >= 1 and not self._cells[i-1][j].visited:
                 dir += "W"
                 to_visit.append((i - 1, j))
             if i < self.cols - 1 and not self._cells[i+1][j].visited:
                 dir += "E"
                 to_visit.append((i + 1, j))
-            if j > 1 and not self._cells[i][j - 1].visited:
+            if j >= 1 and not self._cells[i][j - 1].visited:
                 dir += "N"
                 to_visit.append((i, j - 1))
             if j < self.rows - 1 and not self._cells[i][j + 1].visited:
@@ -107,8 +107,42 @@ class Maze:
             self._cells[i][j].has_left_wall = False
             self._cells[i - 1][j].has_right_wall = False
 
-
     def _reset_cells_visited(self):
         for i in range(self.cols):
             for j in range(self.rows):
                 self._cells[i][j].visited = False
+
+    def solve(self):
+        return self._solve_r(0,0)
+
+    def _solve_r(self, i, j):
+        self._animate()
+        cell = self._cells[i][j]
+        cell.visited = True
+        if i == self.cols - 1 and j == self.rows - 1:
+            return True
+        # west
+        if i >= 1 and not self._cells[i - 1][j].visited and not cell.has_left_wall:
+            if self._solve_cell(cell, i - 1, j):
+                return True
+        # east
+        if i < self.cols - 1 and not self._cells[i + 1][j].visited and not cell.has_right_wall:
+            if self._solve_cell(cell, i + 1, j):
+                return True
+        # north
+        if j >= 1 and not self._cells[i][j - 1].visited and not cell.has_top_wall:
+            if self._solve_cell(cell, i, j - 1):
+                return True
+        # south
+        if j < self.rows - 1 and not self._cells[i][j + 1].visited and not cell.has_bottom_wall:
+            if self._solve_cell(cell, i, j + 1):
+                return True
+        return False
+
+    def _solve_cell(self, cell, i, j):
+        cell.draw_move(self._cells[i][j])
+        if self._solve_r(i, j):
+            return True
+        else:
+            cell.draw_move(self._cells[i][j], undo=True)
+        return False
