@@ -86,13 +86,13 @@ class Maze:
                 to_visit.append((i, j + 1))
             if dir == "":
                 self._cells[i][j].draw()
-                break
+                return
             else:
                 direction = random.randrange(0, len(dir))
-                print(i, j, dir, direction)
+                # print(i, j, dir, direction)
                 self._break_wall(i, j, dir[direction])
                 self._break_walls_r(*to_visit[direction])
-    
+
     def _break_wall(self, i, j, direction):
         if direction == "N":
             self._cells[i][j].has_top_wall = False
@@ -106,3 +106,9 @@ class Maze:
         if direction == "W":
             self._cells[i][j].has_left_wall = False
             self._cells[i - 1][j].has_right_wall = False
+
+
+    def _reset_cells_visited(self):
+        for i in range(self.cols):
+            for j in range(self.rows):
+                self._cells[i][j].visited = False

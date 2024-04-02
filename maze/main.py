@@ -57,6 +57,7 @@ def main():
     )
     initial_maze._break_entrance_and_exit()
     initial_maze._break_walls_r(0, 0)
+    initial_maze._reset_cells_visited()
 
     win.wait_for_close()
 
