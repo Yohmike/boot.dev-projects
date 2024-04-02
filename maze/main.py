@@ -1,5 +1,5 @@
 from basic_graphics import Window, Line, Point, Cell
-
+from maze import Maze
 
 
 def main():
@@ -41,10 +41,20 @@ def main():
         br, tl, fill_color, walls = cell
         draw_cell = Cell(bottom_right=br, top_left=tl, window=win)
         draw_cell.add_walls(walls=walls)
-        draw_cell.draw(fill_color=fill_color)
+        # draw_cell.draw(fill_color=fill_color)
         draw_cells.append(draw_cell)
     
-    draw_cells[5].draw_move(draw_cells[10])
+    # draw_cells[5].draw_move(draw_cells[10])
+
+    maze = Maze(
+        x1 = 10,
+        y1 = 10,
+        num_rows = 10,
+        num_cols = 5,
+        cell_size_x = 20,
+        cell_size_y = 40,
+        win= win
+    )
 
 
     win.wait_for_close()

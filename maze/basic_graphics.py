@@ -62,10 +62,10 @@ class Line:
 
 class Cell:
     def __init__(self, bottom_right: Point, top_left: Point, window: Window) -> None:
-        self.has_left_wall = False
-        self.has_right_wall = False
-        self.has_top_wall = False
-        self.has_bottom_wall = False
+        self.has_left_wall = True
+        self.has_right_wall = True
+        self.has_top_wall = True
+        self.has_bottom_wall = True
 
         self._x1, self._y1 = bottom_right.y, bottom_right.x
         self._x2, self._y2 = top_left.y, top_left.x
@@ -90,14 +90,14 @@ class Cell:
             self._win.draw_line(bottom_line, fill_color=fill_color)
     
     def add_walls(self, walls: str) -> None:
-        if "N" in walls:
-            self.has_top_wall = True
-        if "E" in walls:
-            self.has_right_wall = True
-        if "S" in walls:
-            self.has_bottom_wall = True
-        if "W" in walls:
-            self.has_left_wall = True
+        if "N" not in walls:
+            self.has_top_wall = False
+        if "E" not in walls:
+            self.has_right_wall = False
+        if "S" not in walls:
+            self.has_bottom_wall = False
+        if "W" not in walls:
+            self.has_left_wall = False
     
     def get_center(self):
         if self._x1 == self._x2 == 0:
