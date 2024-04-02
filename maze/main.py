@@ -46,16 +46,17 @@ def main():
     
     # draw_cells[5].draw_move(draw_cells[10])
 
-    maze = Maze(
+    initial_maze = Maze(
         x1 = 10,
         y1 = 10,
         num_rows = 10,
         num_cols = 5,
-        cell_size_x = 20,
-        cell_size_y = 40,
+        cell_size_x = 40,
+        cell_size_y = 20,
         win= win
     )
-
+    initial_maze._break_entrance_and_exit()
+    initial_maze._break_walls_r(0, 0)
 
     win.wait_for_close()
 

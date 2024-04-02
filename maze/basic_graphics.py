@@ -67,29 +67,39 @@ class Cell:
         self.has_top_wall = True
         self.has_bottom_wall = True
 
-        self._x1, self._y1 = bottom_right.y, bottom_right.x
-        self._x2, self._y2 = top_left.y, top_left.x
+        self._x1, self._y1 = top_left.x, top_left.y
+        self._x2, self._y2 = bottom_right.x, bottom_right.y
         self._win = window
+        self.visited = False
 
     def draw(self, fill_color: str = "black") -> None:
         if self._win is None:
             return
-        top_right = Point(self._x1, self._y2)
+        top_right = Point(self._x2, self._y1)
         top_left = Point(self._x1, self._y1)
         bottom_right = Point(self._x2, self._y2)
-        bottom_left = Point(self._x2, self._y1)
+        bottom_left = Point(self._x1, self._y2)
+        left_line = Line(from_point=top_left, to_point=bottom_left)
+        right_line = Line(from_point=top_right, to_point=bottom_right)
+        top_line = Line(from_point=top_left, to_point=top_right)
+        bottom_line = Line(from_point=bottom_left, to_point=bottom_right)
+        default_color = "#d9d9d9"
         if self.has_left_wall:
-            left_line = Line(from_point=top_left, to_point=bottom_left)
             self._win.draw_line(left_line, fill_color=fill_color)
+        else:
+            self._win.draw_line(left_line, fill_color=default_color)
         if self.has_right_wall:
-            right_line = Line(from_point=top_right, to_point=bottom_right)
             self._win.draw_line(right_line, fill_color=fill_color)
+        else:
+            self._win.draw_line(right_line, fill_color=default_color)
         if self.has_top_wall:
-            top_line = Line(from_point=top_left, to_point=top_right)
             self._win.draw_line(top_line, fill_color=fill_color)
+        else:
+            self._win.draw_line(top_line, fill_color=default_color)
         if self.has_bottom_wall:
-            bottom_line = Line(from_point=bottom_left, to_point=bottom_right)
             self._win.draw_line(bottom_line, fill_color=fill_color)
+        else:
+            self._win.draw_line(bottom_line, fill_color=default_color)
     
     def add_walls(self, walls: str) -> None:
         if "N" not in walls:
