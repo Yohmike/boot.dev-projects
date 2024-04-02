@@ -61,7 +61,7 @@ class Line:
 
 
 class Cell:
-    def __init__(self, bottom_right: Point, top_left: Point, window: Window) -> None:
+    def __init__(self, bottom_right: Point, top_left: Point, window: Window = None) -> None:
         self.has_left_wall = True
         self.has_right_wall = True
         self.has_top_wall = True
@@ -72,6 +72,8 @@ class Cell:
         self._win = window
 
     def draw(self, fill_color: str = "black") -> None:
+        if self._win is None:
+            return
         top_right = Point(self._x1, self._y2)
         top_left = Point(self._x1, self._y1)
         bottom_right = Point(self._x2, self._y2)
@@ -118,6 +120,8 @@ class Cell:
 
     
     def draw_move(self, to_cell, undo=False):
+        if self._win is None:
+            return
         color = None
         if undo:
             color = "gray"

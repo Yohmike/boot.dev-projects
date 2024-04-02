@@ -10,7 +10,7 @@ class Maze:
             num_cols: int, 
             cell_size_x: int, 
             cell_size_y:int , 
-            win: Window) -> None:
+            win: Window = None) -> None:
         self.corner = Point(x1, y1)
         self.rows = num_rows
         self.cols = num_cols
@@ -49,5 +49,7 @@ class Maze:
         self._animate()
 
     def _animate(self):
+        if self._win is None:
+            return
         self._win.redraw()
         sleep(0.05)
