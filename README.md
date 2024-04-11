@@ -1,3 +1,3 @@
 # bookbot
-boot.dev testing
-First project commit
+Going through the boot.dev 
+Projects and Guided Projects
