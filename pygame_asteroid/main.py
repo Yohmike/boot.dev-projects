@@ -4,6 +4,8 @@ from constants import *
 
 def main():
     pygame.init()
+    py_game_time = pygame.time.Clock()
+    dt: int = 0
     # print("Starting asteroids!")
     # print(f"Screen width: {SCREEN_WIDTH}")
     # print(f"Screen height: {SCREEN_HEIGHT}")
@@ -14,6 +16,7 @@ def main():
                 return
         screen.fill("black")
         pygame.display.flip()
+        dt = py_game_time.tick(60) // 1000
 
 
 if __name__ == "__main__":
